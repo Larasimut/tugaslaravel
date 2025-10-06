@@ -83,7 +83,7 @@
 <body>
     <div class="welcome-card">
         <h1>Selamat Datang di Halaman Home</h1>
-        <p>Ini adalah tampilan home.blade.php yang telah dipercantik dengan desain modern!</p>
+        <p>Ini adalah tampilan home</p>
     </div>
 </body>
 </html>
