@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 // Route default ke halaman welcome
 Route::get('/', function () {
@@ -8,6 +9,4 @@ Route::get('/', function () {
 });
 
 // Route ke halaman home
-Route::get('/home', function () {
-    return view('home');
-});
+Route::get('/home', [HomeController::class, 'index']);

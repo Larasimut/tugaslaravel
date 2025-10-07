@@ -25,15 +25,24 @@
             margin-bottom: 20px;
             animation: fadeInDown 1s ease-out;
         }
-        p {
-            color: #f0f0f0;
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px 30px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 1s ease-out 0.5s both;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #764ba2;
+            color: white;
+        }
+        tr:hover {
+            background-color: rgba(118, 75, 162, 0.1);
         }
         .welcome-card {
             background: rgba(255, 255, 255, 0.15);
@@ -42,48 +51,48 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 600px;
+            max-width: 700px;
+            width: 100%;
         }
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        /* Responsif untuk perangkat mobile */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            p {
-                font-size: 1em;
-                padding: 10px 20px;
-            }
-            .welcome-card {
-                padding: 20px;
-                margin: 0 20px;
-            }
+            h1 { font-size: 2em; }
+            table { font-size: 0.9em; }
+            .welcome-card { padding: 20px; margin: 0 10px; }
         }
     </style>
 </head>
 <body>
     <div class="welcome-card">
-        <h1>Selamat Datang di Halaman Home</h1>
-        <p>Ini adalah tampilan home</p>
+        <h1>Daftar Buku</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Judul Buku</th>
+                    <th>Penulis</th>
+                    <th>Tahun</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($buku as $index => $b)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $b['judul'] }}</td>
+                        <td>{{ $b['penulis'] }}</td>
+                        <td>{{ $b['tahun'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
