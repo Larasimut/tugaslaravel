@@ -29,13 +29,11 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* Animated Background */
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        /* Floating Book Elements untuk dekorasi */
         .floating-books {
             position: absolute;
             top: 0;
@@ -167,6 +165,17 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .pesan {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
         @media (max-width: 768px) {
             body { padding: 10px; }
             h1 { font-size: 2em; flex-direction: column; gap: 5px; }
@@ -178,12 +187,11 @@
             }
             th, td { min-width: 80px; padding: 8px; }
             .welcome-card { padding: 20px; }
-            .floating-books .book-float { display: none; } /* Sembunyikan float di mobile untuk performa */
+            .floating-books .book-float { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Books Dekorasi -->
     <div class="floating-books">
         <div class="book-float"></div>
         <div class="book-float"></div>
@@ -193,38 +201,43 @@
     <div class="welcome-card">
         <h1><i class="fas fa-book"></i> Daftar Buku</h1>
 
+        <a href="{{ route('form') }}" style="display:block; text-align:center; color:white; text-decoration:underline; margin-bottom:15px;">
+            ➕ Tambah Pesan Baru
+        </a>
+
         @if(isset($buku) && count($buku) > 0)
             <table role="table" aria-label="Daftar buku" id="booksTable">
                 <thead>
                     <tr>
-                        <th scope="col" onclick="sortTable(0)">No <i class="fas fa-sort"></i></th>
-                        <th scope="col" onclick="sortTable(1)">Judul Buku <i class="fas fa-sort"></i></th>
-                        <th scope="col" onclick="sortTable(2)">Penulis <i class="fas fa-sort"></i></th>
-                        <th scope="col" onclick="sortTable(3)">Tahun <i class="fas fa-sort"></i></th>
+                        <th>No <i class="fas fa-sort"></i></th>
+                        <th>Judul Buku <i class="fas fa-sort"></i></th>
+                        <th>Penulis <i class="fas fa-sort"></i></th>
+                        <th>Tahun <i class="fas fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody id="booksBody">
                     @foreach($buku as $index => $b)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $b['judul'] ?? 'Tidak diketahui' }}</td>
-                            <td>{{ $b['penulis'] ?? 'Tidak diketahui' }}</td>
-                            <td>{{ $b['tahun'] ?? 'Tidak diketahui' }}</td>
+                            <td>{{ $b['judul'] }}</td>
+                            <td>{{ $b['penulis'] }}</td>
+                            <td>{{ $b['tahun'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <!-- Pagination -->
             <div class="pagination">
                 <button class="page-btn" onclick="prevPage()" id="prevBtn" disabled><i class="fas fa-chevron-left"></i> Sebelumnya</button>
                 <span id="pageInfo">Halaman 1 dari {{ ceil(count($buku) / 5) }}</span>
                 <button class="page-btn" onclick="nextPage()" id="nextBtn">Selanjutnya <i class="fas fa-chevron-right"></i></button>
             </div>
-        @else
-            <div class="no-data">
-                <i class="fas fa-book-open"></i>
-                <p>Tidak ada data buku yang tersedia. Silakan tambahkan buku baru.</p>
+        @endif
+
+        {{-- 🟣 Pesan muncul di bawah tabel --}}
+        @if (!empty($message))
+            <div class="pesan">
+                <strong>Pesan Kamu:</strong> {{ $message }}
             </div>
         @endif
     </div>
@@ -234,28 +247,6 @@
         let currentPage = 1;
         const itemsPerPage = 5;
 
-        // Fungsi Sorting (tetap ada)
-        function sortTable(colIndex) {
-            const tbody = document.getElementById('booksBody');
-            const rows = Array.from(tbody.rows);
-            const isNumeric = colIndex === 3;
-
-            rows.sort((a, b) => {
-                let aVal = a.cells[colIndex].textContent.trim();
-                let bVal = b.cells[colIndex].textContent.trim();
-                if (isNumeric) {
-                    aVal = parseInt(aVal) || 0;
-                    bVal = parseInt(bVal) || 0;
-                    return aVal - bVal;
-                }
-                return aVal.localeCompare(bVal);
-            });
-
-            tbody.innerHTML = '';
-            rows.forEach(row => tbody.appendChild(row));
-        }
-
-        // Fungsi Pagination (tetap ada, tanpa search)
         function displayBooks(data = booksData) {
             const tbody = document.getElementById('booksBody');
             const start = (currentPage - 1) * itemsPerPage;
@@ -297,10 +288,7 @@
             document.getElementById('nextBtn').disabled = currentPage === totalPages;
         }
 
-        // Inisialisasi
-        if (booksData.length > 0) {
-            displayBooks();
-        }
+        if (booksData.length > 0) displayBooks();
     </script>
 </body>
 </html>

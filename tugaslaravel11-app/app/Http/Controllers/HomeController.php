@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    // 🏠 Halaman utama
+    public function index(Request $request)
     {
         $buku = [
             ['judul' => 'Laskar Pelangi', 'penulis' => 'Andrea Hirata', 'tahun' => 2005],
@@ -16,7 +17,31 @@ class HomeController extends Controller
             ['judul' => 'Dilan 1990', 'penulis' => 'Pidi Baiq', 'tahun' => 2014],
         ];
 
-        // kirim data ke view
-        return view('home', compact('buku'));
+        // ✅ Ambil pesan dari session (hasil redirect)
+        $message = old('message');
+
+        // Kirim data ke view
+        return view('home', compact('buku', 'message'));
+    }
+
+    // 📝 Tampilkan form tambah pesan
+    public function create()
+    {
+        return view('form');
+    }
+
+    // 💾 Simpan pesan dari form
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        // Ambil isi pesan
+        $message = $request->input('message');
+
+        // Redirect ke home sambil kirim data
+        return redirect()->route('home')->withInput(['message' => $message]);
     }
 }
